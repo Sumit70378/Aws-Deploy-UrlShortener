@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+            transition: transform 0.3s;
+        }
+
+        h1:hover, h2:hover {
+            transform: scale(1.05);
+        }
+
+        form {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #218838;
+            transform: scale(1.1);
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #555;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fff;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease-in-out;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn {
+            padding: 6px 10px;
+            background: #dc3545;
+            border: none;
+            color: white;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function deleteUrl(shortId) {
+            fetch(`/delete/${shortId}`, {
+                method: 'DELETE'
+            }).then(() => {
+                document.getElementById(shortId).remove();
+            }).catch(err => console.error(err));
+        }
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>URL Shortener</h1>
+
+        <form action="/url" method="POST">
+            <input type="text" name="url" placeholder="Enter the URL you want to shorten" required>
+            <button type="submit">Shorten URL</button>
+        </form>
+
+        <h2>Shortened URLs</h2>
+        <ul>
+            <% urls.forEach(url => { %>
+                <li id="<%= url.shortId %>">
+                    <div>
+                        <strong>Short Link:</strong>
+                        <a href="http://localhost:8080/<%= url.shortId %>" target="_blank">
+                            <%= url.shortId %>
+                        </a>  
+                        → <%= url.redirectURL %>
+                    </div>
+                    <button class="delete-btn" onclick="deleteUrl('<%= url.shortId %>')">Delete</button>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+<script>
+    function deleteUrl(shortId) {
+    fetch(`/${shortId}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(shortId).remove(); // Remove from UI
+        } else {
+            alert("Failed to delete URL from the database.");
+        }
+    })
+    .catch(err => console.error("Error deleting URL:", err));
+}
+
+</script>
+</body>
+</html>
