@@ -3,7 +3,8 @@ const { connectMongodb } = require("./Connection");
 const urlRoute = require("./routes/index")
 const URL = require("./model/index")
 
-connectMongodb("mongodb+srv://sumitrawat2714_db_user:je7pfElP3qU504Mv@cluster0.vr2ltaw.mongodb.net/?appName=Cluster0").then(() => {
+connectMongodb("mongodb+srv://sumitrawat2714_db_user:je7pfElP3qU504Mv@cluster0.vr2ltaw.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0")
+.then(() => {
     console.log("Mongodb Connected..")
 }).catch(() => {
     console.log("Mongodb Not Connected..")
