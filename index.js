@@ -3,7 +3,7 @@ const { connectMongodb } = require("./Connection");
 const urlRoute = require("./routes/index")
 const URL = require("./model/index")
 
-connectMongodb("mongodb+srv://sumitrawat2714_db_user:je7pfElP3qU504Mv@cluster0.vr2ltaw.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0")
+connectMongodb("mongodb://localhost:27017/test")
 .then(() => {
     console.log("Mongodb Connected..")
 }).catch(() => {
